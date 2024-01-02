@@ -1,16 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout android:layout_width="match_parent"
+    android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
-
-
-
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#595251"
-        tools:context=".MainActivity">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="#595251"
+    tools:context=".MainActivity"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
         <androidx.cardview.widget.CardView
             android:id="@+id/cardView"
@@ -119,4 +114,3 @@
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-</layout>

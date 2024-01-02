@@ -1,4 +1,4 @@
-package com.mycode.alpha;
+package com.mycode.alpha.model;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -12,13 +12,13 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.mycode.alpha.Home;
 import com.mycode.alpha.R;
 
 public class CreateAccountActivity extends AppCompatActivity {
@@ -67,7 +67,7 @@ public class CreateAccountActivity extends AppCompatActivity {
                     String email = fillEmail.getText().toString().trim();
                     String pass = fillPwd.getText().toString().trim();
                     createAccount(userName,email,pass);
-                    Intent i = new Intent(CreateAccountActivity.this, Home.class);
+                    Intent i  =new Intent(CreateAccountActivity.this, Home.class);
                     startActivity(i);
                 }else {
                     Toast.makeText(CreateAccountActivity.this,
