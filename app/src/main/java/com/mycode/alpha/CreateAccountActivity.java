@@ -13,9 +13,12 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -27,7 +30,7 @@ public class CreateAccountActivity extends AppCompatActivity {
     private Button createBtn;
 
     //firebase
-    private FirebaseAuth firebaseAuth;
+    private FirebaseAuth Auth;
     private FirebaseUser firebaseUser;
     private FirebaseAuth.AuthStateListener authStateListener;
 
@@ -45,7 +48,7 @@ public class CreateAccountActivity extends AppCompatActivity {
         email = findViewById(R.id.email);
         userName = findViewById(R.id.userName);
 
-        firebaseAuth =FirebaseAuth.getInstance();
+        Auth =FirebaseAuth.getInstance();
         authStateListener= new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
@@ -81,17 +84,27 @@ public class CreateAccountActivity extends AppCompatActivity {
             String email,
             String password){
         if (!TextUtils.isEmpty(email)&&!TextUtils.isEmpty(password)&&!TextUtils.isEmpty(userName)){
-            firebaseAuth.createUserWithEmailAndPassword(email,password)
-                    .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-                            if (task.isSuccessful()){
-                                Toast.makeText(CreateAccountActivity.this,
-                                        "Account Created", Toast.LENGTH_SHORT).show();
-                                Intent i  =new Intent(CreateAccountActivity.this, Home.class);
-                                startActivity(i);
+            Auth.createUserWithEmailAndPassword(email,password)
+                    .addOnSuccessListener(authResult -> {
 
-                            }
+                        Toast.makeText(CreateAccountActivity.this,
+                                "Account Created", Toast.LENGTH_SHORT).show();
+                        Intent i  =new Intent(CreateAccountActivity.this, Home.class);
+                        startActivity(i);
+
+
+                    }).addOnFailureListener(e -> {
+                        if (e instanceof FirebaseAuthUserCollisionException) {
+                            // Email is already in use
+                            // Inform the user or provide a password reset option
+                            Toast.makeText(CreateAccountActivity.this,
+                                    "Email is already in use. Please reset your password if needed.",
+                                    Toast.LENGTH_SHORT).show();
+                        } else {
+                            // Other registration failures
+                            Toast.makeText(CreateAccountActivity.this,
+                                    "Registration failed. Please try again later.",
+                                    Toast.LENGTH_SHORT).show();
                         }
                     });
         }

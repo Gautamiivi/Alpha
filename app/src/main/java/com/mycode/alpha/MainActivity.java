@@ -1,5 +1,6 @@
 package com.mycode.alpha;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -8,7 +9,9 @@ import android.text.TextUtils;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -48,6 +51,8 @@ public class MainActivity extends AppCompatActivity {
 
         //fire base auth
         firebaseAuth = FirebaseAuth.getInstance();
+
+        currentUser = firebaseAuth.getCurrentUser();
         login.setOnClickListener(v->
         {
             verifyUser(email.getText().toString().trim(),
@@ -63,7 +68,9 @@ public class MainActivity extends AppCompatActivity {
                         FirebaseUser user = firebaseAuth.getCurrentUser();
                         Intent i = new Intent(MainActivity.this, Home.class);
                         startActivity(i);
-
+                        finish();
+                    }).addOnFailureListener(e -> {
+                        Toast.makeText(MainActivity.this, "Authentication failed. Check your email and password.", Toast.LENGTH_SHORT).show();
                     });
 
         }
