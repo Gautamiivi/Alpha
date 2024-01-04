@@ -6,4 +6,10 @@
     </style>
 
     <style name="Theme.Alpha" parent="Base.Theme.Alpha" />
+    <style name="Theme.Alpha.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+    <style name="Theme.Alpha.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+    <style name="Theme.Alpha.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 </resources>

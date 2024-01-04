@@ -5,17 +5,17 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.mycode.alpha.model.CreateAccountActivity;
 
 public class MainActivity extends AppCompatActivity {
 
-    private EditText email;
-    private EditText pwd;
+    private AutoCompleteTextView email;
+    private AutoCompleteTextView pwd;
     private Button login;
     private Button forgetPwd;
     private Button createAccount;
@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
         email= findViewById(R.id.email);
 
         createAccount.setOnClickListener(v->{
-            Intent i = new Intent(MainActivity.this, Home.class);
+            Intent i = new Intent(MainActivity.this,CreateAccountActivity.class);
             startActivity(i);
         });
 
@@ -50,14 +50,15 @@ public class MainActivity extends AppCompatActivity {
         firebaseAuth = FirebaseAuth.getInstance();
         login.setOnClickListener(v->
         {
-            verifyUser(email.getText().toString().trim(),pwd.getText().toString().trim());
+            verifyUser(email.getText().toString().trim(),
+                    pwd.getText().toString().trim());
         });
 
 
     }
     private void verifyUser(String email,String pass){
         if (!TextUtils.isEmpty(email) && !TextUtils.isEmpty(pass)){
-            firebaseAuth.signInWithEmailAndPassword(email, pass)
+            firebaseAuth.signInWithEmailAndPassword(email,pass)
                     .addOnSuccessListener(authResult -> {
                         FirebaseUser user = firebaseAuth.getCurrentUser();
                         Intent i = new Intent(MainActivity.this, Home.class);
