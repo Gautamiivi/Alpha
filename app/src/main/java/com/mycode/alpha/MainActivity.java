@@ -11,8 +11,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.FirebaseNetworkException;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseUser;
 
 public class MainActivity extends AppCompatActivity {
@@ -64,15 +69,26 @@ public class MainActivity extends AppCompatActivity {
     private void verifyUser(String email,String pass){
         if (!TextUtils.isEmpty(email) && !TextUtils.isEmpty(pass)){
             firebaseAuth.signInWithEmailAndPassword(email,pass)
-                    .addOnSuccessListener(authResult -> {
-                        FirebaseUser user = firebaseAuth.getCurrentUser();
-                        Intent i = new Intent(MainActivity.this, Home.class);
-                        startActivity(i);
-                        finish();
-                    }).addOnFailureListener(e -> {
-                        Toast.makeText(MainActivity.this, "Authentication failed. Check your email and password.", Toast.LENGTH_SHORT).show();
-                    });
+                    .addOnCompleteListener((OnCompleteListener<AuthResult>) task -> {
+                        if (task.isSuccessful()) {
+                            FirebaseUser user = firebaseAuth.getCurrentUser();
+                            Intent i = new Intent(MainActivity.this, Home.class);
+                            startActivity(i);
+                            finish();
+                        } else {
+                            // Handle sign-in failure
+                            Exception exception = task.getException();
+                            if (exception instanceof FirebaseAuthInvalidCredentialsException) {
+                                // Handle invalid credentials
+                            } else if (exception instanceof FirebaseNetworkException) {
+                                // Handle network-related issues
+                            } else {
+                                // Handle other types of errors
+                            }
+                        }
 
+
+                    });
         }
 
     }
