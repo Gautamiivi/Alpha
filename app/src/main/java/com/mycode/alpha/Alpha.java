@@ -5,6 +5,8 @@ import com.google.firebase.Timestamp;
 public class Alpha {
 
 
+    private String followers;
+    private String profileImageUrl;
     private String caption;
     private String imageUrl;
     private String userId;
@@ -14,12 +16,30 @@ public class Alpha {
     public Alpha() {
     }
 
-    public Alpha(String caption, String imageUrl, String userId, String userName, Timestamp timeAdded) {
+    public String getFollowers() {
+        return followers;
+    }
+
+    public void setFollowers(String followers) {
+        this.followers = followers;
+    }
+
+    public String getProfileImageUrl() {
+        return profileImageUrl;
+    }
+
+    public void setProfileImageUrl(String profileImageUrl) {
+        this.profileImageUrl = profileImageUrl;
+    }
+
+    public Alpha(String caption, String imageUrl, String userId, String userName, Timestamp timeAdded, String followers, String profileImageUrl) {
         this.caption = caption;
         this.imageUrl = imageUrl;
         this.userId = userId;
         this.userName = userName;
         this.timeAdded = timeAdded;
+        this.followers = followers;
+        this.profileImageUrl = profileImageUrl;
     }
 
     public String getCaption() {

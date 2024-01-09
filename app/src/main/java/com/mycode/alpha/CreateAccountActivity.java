@@ -1,15 +1,20 @@
 package com.mycode.alpha;
 
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -21,13 +26,18 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 public class CreateAccountActivity extends AppCompatActivity {
     private AutoCompleteTextView userName;
     private AutoCompleteTextView email;
     private AutoCompleteTextView pwd;
     private Button createBtn;
+    private ImageView profileImage;
 
     //firebase
     private FirebaseAuth Auth;
@@ -36,12 +46,35 @@ public class CreateAccountActivity extends AppCompatActivity {
 
     //firebase collection
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private CollectionReference collectionReference = db.collection("user");
+
+    ActivityResultLauncher<String> takePhoto;
+    Uri imageUri;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_account);
+
+        profileImage = findViewById(R.id.profileImage);
+
+
+        takePhoto = registerForActivityResult(new ActivityResultContracts.GetContent(),
+                new ActivityResultCallback<Uri>() {
+                    @Override
+                    public void onActivityResult(Uri o) {
+                        //showing the image
+                        profileImage.setImageURI(o);
+
+                        //getting the image uri
+                        imageUri = o;
+                    }
+                });
+        profileImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                takePhoto.launch("image/*");
+            }
+        });
 
         createBtn = findViewById(R.id.createNewAccountBtn);
         pwd = findViewById(R.id.pwd);
@@ -78,6 +111,21 @@ public class CreateAccountActivity extends AppCompatActivity {
 
         });
 
+
+    }
+
+
+    protected void onStart() {
+        super.onStart();
+        Auth.addAuthStateListener(authStateListener);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (authStateListener != null) {
+            Auth.removeAuthStateListener(authStateListener);
+        }
     }
     private void createAccount(
             String userName,

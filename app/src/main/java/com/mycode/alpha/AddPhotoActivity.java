@@ -69,6 +69,7 @@ public class AddPhotoActivity extends AppCompatActivity {
         progress_bar = findViewById(R.id.progress_bar);
 
 
+
         takePhoto = registerForActivityResult(new ActivityResultContracts.GetContent(),
                 new ActivityResultCallback<Uri>() {
             @Override
@@ -88,11 +89,12 @@ public class AddPhotoActivity extends AppCompatActivity {
 
         //firebase auth
         firebaseAuth = FirebaseAuth.getInstance();
+        user = firebaseAuth.getCurrentUser();
 
         //getting the current user;
         if (user != null){
             currentUserId = user.getUid();
-            currentUserName = user.getDisplayName();
+            currentUserName = user.getEmail();
         }
 
         upload_btn.setOnClickListener(v->

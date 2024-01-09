@@ -37,16 +37,24 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
       Alpha currentAlpha = alphaList.get(position);
       holder.userName.setText(currentAlpha.getUserName());
       holder.caption.setText(currentAlpha.getCaption());
+      String profileImageUrl = currentAlpha.getProfileImageUrl();
       String imageUrl = currentAlpha.getImageUrl();
       String timeAgo = (String) DateUtils.getRelativeTimeSpanString(currentAlpha
               .getTimeAdded().getSeconds()*1000);
       holder.timestamp.setText(timeAgo);
+
+      Glide.with(context)
+                      .load(profileImageUrl)
+                              .fitCenter()
+                                      .into(holder.profileImage);
+
 
         //glide lib to display the image
         Glide.with(context)
                 .load(imageUrl)
                 .fitCenter()
                 .into(holder.userImage);
+
 
     }
 

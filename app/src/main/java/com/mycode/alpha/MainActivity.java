@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.widget.AutoCompleteTextView;
@@ -56,8 +57,18 @@ public class MainActivity extends AppCompatActivity {
 
         //fire base auth
         firebaseAuth = FirebaseAuth.getInstance();
-
-        currentUser = firebaseAuth.getCurrentUser();
+        authStateListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                currentUser = firebaseAuth.getCurrentUser();
+                if (currentUser != null) {
+                    // User is already authenticated, go to Home activity
+                    Intent intent = new Intent(MainActivity.this, Home.class);
+                    startActivity(intent);
+                    finish(); // Finish this activity to prevent going back to the login screen
+                }
+            }
+        };
         login.setOnClickListener(v->
         {
             verifyUser(email.getText().toString().trim(),
@@ -66,17 +77,33 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
+    @Override
+    protected void onStart() {
+        super.onStart();
+        firebaseAuth.addAuthStateListener(authStateListener);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (authStateListener != null) {
+            firebaseAuth.removeAuthStateListener(authStateListener);
+        }
+    }
     private void verifyUser(String email,String pass){
         if (!TextUtils.isEmpty(email) && !TextUtils.isEmpty(pass)){
             firebaseAuth.signInWithEmailAndPassword(email,pass)
                     .addOnCompleteListener((OnCompleteListener<AuthResult>) task -> {
                         if (task.isSuccessful()) {
+                            // Save user login state on successful login
+                            saveUserLoginState();
                             FirebaseUser user = firebaseAuth.getCurrentUser();
                             Intent i = new Intent(MainActivity.this, Home.class);
                             startActivity(i);
                             finish();
                         } else {
                             // Handle sign-in failure
+                            handleSignInError(task.getException());
                             Exception exception = task.getException();
                             if (exception instanceof FirebaseAuthInvalidCredentialsException) {
                                 // Handle invalid credentials
@@ -91,5 +118,27 @@ public class MainActivity extends AppCompatActivity {
                     });
         }
 
+    }
+
+
+    private void saveUserLoginState() {
+        // Save user login state using SharedPreferences
+        SharedPreferences preferences = getSharedPreferences("user_prefs", MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putBoolean("is_user_logged_in", true);
+        editor.apply();
+    }
+
+    private void handleSignInError(Exception exception) {
+        if (exception instanceof FirebaseAuthInvalidCredentialsException) {
+            // Handle invalid credentials
+            Toast.makeText(MainActivity.this, "Invalid credentials", Toast.LENGTH_SHORT).show();
+        } else if (exception instanceof FirebaseNetworkException) {
+            // Handle network-related issues
+            Toast.makeText(MainActivity.this, "Network issues", Toast.LENGTH_SHORT).show();
+        } else {
+            // Handle other types of errors
+            Toast.makeText(MainActivity.this, "Authentication failed", Toast.LENGTH_SHORT).show();
+        }
     }
 }

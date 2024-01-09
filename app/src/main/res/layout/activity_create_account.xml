@@ -4,107 +4,108 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#595251"
+    android:background="#00B0FF"
     tools:context=".MainActivity">
 
-    <androidx.cardview.widget.CardView
-        android:id="@+id/cardView"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:backgroundTint="#038F4B"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/appName">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="5dp"
-            android:padding="10dp"
-            android:text="Create Account"
-            android:textColor="@color/white"
-            android:textSize="23dp"
-            android:textStyle="bold" />
-
-        <AutoCompleteTextView
-            android:id="@+id/userName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="30dp"
-            android:layout_marginTop="150dp"
-            android:layout_marginEnd="30dp"
-            android:backgroundTint="@color/white"
-            android:hint="User Name"
-            android:inputType="textEmailAddress"
-            android:padding="10dp"
-            android:textColor="@color/white"
-            android:textColorHint="@color/white"
-            android:textSize="23sp" />
-
-
-        <AutoCompleteTextView
-            android:id="@+id/email"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="30dp"
-            android:layout_marginTop="200dp"
-            android:layout_marginEnd="30dp"
-            android:backgroundTint="@color/white"
-            android:hint="Email"
-            android:inputType="textEmailAddress"
-            android:padding="10dp"
-            android:textColor="@color/white"
-            android:textColorHint="@color/white"
-            android:textSize="23sp" />
-
-        <AutoCompleteTextView
-            android:id="@+id/pwd"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="30dp"
-            android:layout_marginTop="250dp"
-            android:layout_marginEnd="30dp"
-            android:backgroundTint="@color/white"
-            android:hint="Password"
-            android:inputType="textPassword"
-            android:padding="10dp"
-            android:textColor="@color/white"
-            android:textColorHint="@color/white"
-            android:textSize="23sp" />
-
-
-        <Button
-            android:id="@+id/createNewAccountBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="370dp"
-            android:backgroundTint="#038F4B"
-            android:padding="1dp"
-            android:text="Create Account"
-            android:textSize="18dp" />
-
-
-    </androidx.cardview.widget.CardView>
 
     <TextView
-        android:id="@+id/appName"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:layout_marginBottom="15dp"
-        android:background="#FF3D00"
-        android:gravity="center_horizontal"
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="4dp"
+        android:background="@color/white"
         android:padding="10dp"
-        android:text="ALPHA"
-        android:textColor="@color/white"
-        android:textSize="30dp"
+        android:text="Create Account"
+        android:textColor="@color/black"
+        android:textSize="23dp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/cardView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+
+    <ImageView
+        android:id="@+id/profileImage"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginTop="96dp"
+        android:src="@drawable/baseline_camera_alt_24"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView" />
+
+    <AutoCompleteTextView
+        android:id="@+id/userName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="100dp"
+        android:layout_marginEnd="20dp"
+        android:background="@color/white"
+        android:hint="User Name"
+        android:inputType="textEmailAddress"
+        android:padding="10dp"
+        android:textColor="@color/black"
+        android:textColorHint="@color/black"
+        android:textSize="23sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/profileImage" />
+
+    <AutoCompleteTextView
+        android:id="@+id/email"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:hint="Email"
+        android:inputType="textEmailAddress"
+        android:padding="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginStart="20dp"
+        android:textColor="@color/black"
+        android:textColorHint="@color/black"
+        android:textSize="23sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/userName" />
+
+    <AutoCompleteTextView
+        android:id="@+id/pwd"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginStart="20dp"
+        android:background="@color/white"
+        android:hint="Password"
+        android:inputType="textPassword"
+        android:padding="10dp"
+        android:textColor="@color/black"
+        android:textColorHint="@color/black"
+        android:textSize="23sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/email" />
+
+    <Button
+        android:id="@+id/createNewAccountBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="76dp"
+        android:backgroundTint="@color/white"
+        android:padding="1dp"
+        android:text="Create Account"
+        android:textColor="@color/black"
+        android:textSize="18dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/pwd" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

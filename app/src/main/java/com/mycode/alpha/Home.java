@@ -3,31 +3,31 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
+import com.google.android.material.appbar.AppBarLayout;
+import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-
-
 import java.util.ArrayList;
 import java.util.List;
-
 public class Home extends AppCompatActivity {
 
-    private Toolbar toolbar;
     private RecyclerView recyclerView;
     private BottomNavigationView bottomNev;
     private MyAdapter myAdapter;
     private List<Alpha> alphaList;
+    private CollapsingToolbarLayout collapsingToolbarLayout;
+    private AppBarLayout appBarLayout;
+    private Toolbar toolbar;
+    private boolean isToolbarVisible = true;
 
     // firebase auth
     private FirebaseAuth firebaseAuth;
@@ -42,20 +42,47 @@ public class Home extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        toolbar = findViewById(R.id.toolbar);
+
+
         bottomNev = findViewById(R.id.bottomNev);
         recyclerView = findViewById(R.id.recyclerView);
 
-        setSupportActionBar(toolbar);
+
+
+
+        // Toolbar code
+         appBarLayout = findViewById(R.id.appbar);
+         toolbar = findViewById(R.id.toolbar);
+         setSupportActionBar(toolbar);
+
 
         // firebase
         firebaseAuth = FirebaseAuth.getInstance();
         user = firebaseAuth.getCurrentUser();
 
+
+        // Adapter
         alphaList = new ArrayList<>();
         myAdapter = new MyAdapter(Home.this, alphaList);
-        recyclerView.setHasFixedSize(true);
+        recyclerView.setHasFixedSize(false);
 
+
+        //handling toolbar
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                if (dy>0){
+                    // Scrolling up
+                    hideToolbar();
+                }else {
+                    // Scrolling down
+                    showToolbar();
+                }
+            }
+        });
+
+
+        // Bottom nev code
         bottomNev.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -72,6 +99,21 @@ public class Home extends AppCompatActivity {
                 return true;
             }
         });
+    }
+    private void hideToolbar() {
+        if (isToolbarVisible) {
+            // Animate the Toolbar to go up with the RecyclerView
+            toolbar.animate().translationY(-toolbar.getHeight()).setDuration(400).start();
+            isToolbarVisible = false;
+        }
+    }
+
+    private void showToolbar() {
+        if (!isToolbarVisible) {
+            // Animate the Toolbar to scroll down first
+            toolbar.animate().translationY(0).setDuration(400).start();
+            isToolbarVisible = true;
+        }
     }
 
     @Override
@@ -99,5 +141,13 @@ public class Home extends AppCompatActivity {
             // Handle the case when the user is null (not authenticated)
             // You might want to redirect to the login screen or take appropriate action.
         }
+    }
+    public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+        // Customize the behavior based on the vertical offset
+        int maxScroll = appBarLayout.getTotalScrollRange();
+        float percentage = (float) Math.abs(verticalOffset) / (float) maxScroll;
+
+        // Example: Fade the toolbar based on the scroll offset
+        toolbar.setAlpha(1 - percentage);
     }
 }
