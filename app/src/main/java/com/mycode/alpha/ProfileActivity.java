@@ -7,11 +7,15 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,16 +26,21 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ProfileActivity extends AppCompatActivity {
 
    private ImageView profileImage;
     private TextView username,followerCount;
     private RecyclerView imageGridRecyclerView;
-
+    private ProfileAdapter adapter;
 
     //firebase services
     private FirebaseAuth firebaseAuth;
@@ -40,11 +49,12 @@ public class ProfileActivity extends AppCompatActivity {
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private CollectionReference collectionReference = db.collection("Alpha");
-    private StorageReference storageReference;
+
 
     //using activitySResultLauncher
     ActivityResultLauncher<String> profileImageUrl;
     Uri imageUri;
+    private List<Alpha> arrayList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,52 +68,48 @@ public class ProfileActivity extends AppCompatActivity {
         followerCount = findViewById(R.id.followerCount);
         imageGridRecyclerView = findViewById(R.id.imageGridRecyclerView);
 
-
-
-        //using activitySResultLauncher
-        profileImageUrl = registerForActivityResult(new ActivityResultContracts.GetContent(),
-                new ActivityResultCallback<Uri>() {
-            @Override
-            public void onActivityResult(Uri o) {
-                profileImage.setImageURI(o);
-                imageUri = o;
-            }
-        });
-
-
-        //firebaseServices
        firebaseAuth = FirebaseAuth.getInstance();
        user = firebaseAuth.getCurrentUser();
-        if (imageUri !=null) {
-            // Get a reference to the storage location
-            storageReference = FirebaseStorage.getInstance().getReference();
+       arrayList = new ArrayList<>();
+       adapter = new ProfileAdapter(this,arrayList);
+       imageGridRecyclerView.setHasFixedSize(true);
 
-            // Create a reference to the profile image file in storage
-            final StorageReference file = storageReference.child("profile_img.jpj");
+    }
 
-            //upload the image on fireStore
-            file.putFile(imageUri)
-                    .addOnSuccessListener(taskSnapshot -> {
-                        file.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                            @Override
-                            public void onSuccess(Uri uri) {
-                               String url = uri.toString();
-                                Alpha alpha = new Alpha();
-                                alpha.setProfileImageUrl(url);
-                                collectionReference.add(alpha);
-                            }
-                        }).addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Toast.makeText(ProfileActivity.this,
-                                        "Uploading Fail Retry"+e.getMessage(),
-                                        Toast.LENGTH_SHORT).show();
-                            }
-                        });
-                    });
-
-
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (user!=null){
+            collectionReference.get().addOnSuccessListener(queryDocumentSnapshots -> {
+                arrayList.clear();
+                if (queryDocumentSnapshots!=null && !queryDocumentSnapshots.isEmpty()){
+                    for (QueryDocumentSnapshot alphas :queryDocumentSnapshots){
+                        Alpha alpha  = alphas.toObject(Alpha.class);
+                        arrayList.add(alpha);
+                    }
+                    imageGridRecyclerView.setLayoutManager(new GridLayoutManager(this,2));
+                    imageGridRecyclerView.setAdapter(adapter);
+                    adapter.notifyDataSetChanged();
+                }
+            });
         }
 
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.profile_menu,menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+        if(id==R.id.sign_out){
+            firebaseAuth.signOut();
+            Intent i  = new Intent(ProfileActivity.this,MainActivity.class);
+            startActivity(i);
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

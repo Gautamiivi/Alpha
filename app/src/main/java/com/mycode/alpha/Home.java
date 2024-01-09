@@ -103,7 +103,7 @@ public class Home extends AppCompatActivity {
     private void hideToolbar() {
         if (isToolbarVisible) {
             // Animate the Toolbar to go up with the RecyclerView
-            toolbar.animate().translationY(-toolbar.getHeight()).setDuration(400).start();
+            toolbar.animate().translationY(-toolbar.getHeight()).setDuration(100).start();
             isToolbarVisible = false;
         }
     }
@@ -111,7 +111,7 @@ public class Home extends AppCompatActivity {
     private void showToolbar() {
         if (!isToolbarVisible) {
             // Animate the Toolbar to scroll down first
-            toolbar.animate().translationY(0).setDuration(400).start();
+            toolbar.animate().translationY(0).setDuration(100).start();
             isToolbarVisible = true;
         }
     }
@@ -141,13 +141,5 @@ public class Home extends AppCompatActivity {
             // Handle the case when the user is null (not authenticated)
             // You might want to redirect to the login screen or take appropriate action.
         }
-    }
-    public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
-        // Customize the behavior based on the vertical offset
-        int maxScroll = appBarLayout.getTotalScrollRange();
-        float percentage = (float) Math.abs(verticalOffset) / (float) maxScroll;
-
-        // Example: Fade the toolbar based on the scroll offset
-        toolbar.setAlpha(1 - percentage);
     }
 }

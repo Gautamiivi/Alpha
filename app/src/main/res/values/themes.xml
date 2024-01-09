@@ -2,6 +2,8 @@
     <!-- Base application theme. -->
     <style name="AppTheme1" parent="Theme.Material3.Light">
         <item name="android:statusBarColor">#0577AA</item>
+        <item name="colorPrimary">#00B0FF</item>
+
     </style>
 
     <style name="AppTheme" parent="Theme.Material3.Light.NoActionBar">

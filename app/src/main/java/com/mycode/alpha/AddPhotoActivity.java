@@ -121,7 +121,7 @@ public class AddPhotoActivity extends AppCompatActivity {
         if (!TextUtils.isEmpty(caption)&&imageUri !=null){
 
            final StorageReference filePath = storageReference
-                   .child("alpha_image").child("my_mage"+ Timestamp.now().getSeconds());
+                   .child("alpha_image").child("my_mage"+currentUserId+ Timestamp.now().getSeconds());
            //uploading the image
             filePath.putFile(imageUri)
                     .addOnSuccessListener(taskSnapshot -> {
