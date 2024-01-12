@@ -3,6 +3,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -27,7 +29,7 @@ public class Home extends AppCompatActivity {
     private CollapsingToolbarLayout collapsingToolbarLayout;
     private AppBarLayout appBarLayout;
     private Toolbar toolbar;
-    private boolean isToolbarVisible = true;
+    private boolean isAppBarVisible = true;
 
     // firebase auth
     private FirebaseAuth firebaseAuth;
@@ -51,9 +53,9 @@ public class Home extends AppCompatActivity {
 
 
         // Toolbar code
-         appBarLayout = findViewById(R.id.appbar);
          toolbar = findViewById(R.id.toolbar);
          setSupportActionBar(toolbar);
+
 
 
         // firebase
@@ -65,21 +67,6 @@ public class Home extends AppCompatActivity {
         alphaList = new ArrayList<>();
         myAdapter = new MyAdapter(Home.this, alphaList);
         recyclerView.setHasFixedSize(false);
-
-
-        //handling toolbar
-        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-                if (dy>0){
-                    // Scrolling up
-                    hideToolbar();
-                }else {
-                    // Scrolling down
-                    showToolbar();
-                }
-            }
-        });
 
 
         // Bottom nev code
@@ -100,21 +87,7 @@ public class Home extends AppCompatActivity {
             }
         });
     }
-    private void hideToolbar() {
-        if (isToolbarVisible) {
-            // Animate the Toolbar to go up with the RecyclerView
-            toolbar.animate().translationY(-toolbar.getHeight()).setDuration(100).start();
-            isToolbarVisible = false;
-        }
-    }
 
-    private void showToolbar() {
-        if (!isToolbarVisible) {
-            // Animate the Toolbar to scroll down first
-            toolbar.animate().translationY(0).setDuration(100).start();
-            isToolbarVisible = true;
-        }
-    }
 
     @Override
     protected void onStart() {

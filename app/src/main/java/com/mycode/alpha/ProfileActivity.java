@@ -80,7 +80,8 @@ public class ProfileActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         if (user!=null){
-            collectionReference.get().addOnSuccessListener(queryDocumentSnapshots -> {
+            collectionReference.whereEqualTo("userId",user.getUid())
+            .get().addOnSuccessListener(queryDocumentSnapshots -> {
                 arrayList.clear();
                 if (queryDocumentSnapshots!=null && !queryDocumentSnapshots.isEmpty()){
                     for (QueryDocumentSnapshot alphas :queryDocumentSnapshots){

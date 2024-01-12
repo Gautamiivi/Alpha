@@ -53,8 +53,9 @@ public class AddPhotoActivity extends AppCompatActivity {
 
 
     //using activityResultLauncher
-    ActivityResultLauncher<String> takePhoto;
-    Uri imageUri;
+    private ActivityResultLauncher<String> takePhoto;
+    private Uri imageUri;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,7 +109,6 @@ public class AddPhotoActivity extends AppCompatActivity {
         });
         imageButton_g.setOnClickListener(v->{
             takePhoto.launch("image/*");
-            Intent intent = new Intent();
         });
 
 
