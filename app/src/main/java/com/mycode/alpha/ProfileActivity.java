@@ -16,6 +16,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -38,7 +39,7 @@ import java.util.List;
 public class ProfileActivity extends AppCompatActivity {
 
    private ImageView profileImage;
-    private TextView username,followerCount;
+    private TextView username;
     private RecyclerView imageGridRecyclerView;
     private ProfileAdapter adapter;
 
@@ -50,10 +51,6 @@ public class ProfileActivity extends AppCompatActivity {
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private CollectionReference collectionReference = db.collection("Alpha");
 
-
-    //using activitySResultLauncher
-    ActivityResultLauncher<String> profileImageUrl;
-    Uri imageUri;
     private List<Alpha> arrayList;
 
     @Override
@@ -65,7 +62,6 @@ public class ProfileActivity extends AppCompatActivity {
         //widgets
         profileImage = findViewById(R.id.profileImage);
         username = findViewById(R.id.username);
-        followerCount = findViewById(R.id.followerCount);
         imageGridRecyclerView = findViewById(R.id.imageGridRecyclerView);
 
        firebaseAuth = FirebaseAuth.getInstance();
@@ -73,6 +69,7 @@ public class ProfileActivity extends AppCompatActivity {
        arrayList = new ArrayList<>();
        adapter = new ProfileAdapter(this,arrayList);
        imageGridRecyclerView.setHasFixedSize(true);
+       username.setText(user.getEmail());
 
     }
 
@@ -88,7 +85,7 @@ public class ProfileActivity extends AppCompatActivity {
                         Alpha alpha  = alphas.toObject(Alpha.class);
                         arrayList.add(alpha);
                     }
-                    imageGridRecyclerView.setLayoutManager(new GridLayoutManager(this,2));
+                    imageGridRecyclerView.setLayoutManager(new GridLayoutManager(this,3));
                     imageGridRecyclerView.setAdapter(adapter);
                     adapter.notifyDataSetChanged();
                 }
@@ -110,6 +107,7 @@ public class ProfileActivity extends AppCompatActivity {
             firebaseAuth.signOut();
             Intent i  = new Intent(ProfileActivity.this,MainActivity.class);
             startActivity(i);
+            finish();
         }
         return super.onOptionsItemSelected(item);
     }

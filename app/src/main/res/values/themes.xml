@@ -1,13 +1,13 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
     <style name="AppTheme1" parent="Theme.Material3.Light">
-        <item name="android:statusBarColor">#0577AA</item>
-        <item name="colorPrimary">#00B0FF</item>
+        <item name="android:statusBarColor">@color/white</item>
+        <item name="colorPrimary">#AC91BA</item>
 
     </style>
 
     <style name="AppTheme" parent="Theme.Material3.Light.NoActionBar">
-        <item name="android:statusBarColor">#0577AA</item>
+        <item name="android:statusBarColor">@color/white</item>
     </style>
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />

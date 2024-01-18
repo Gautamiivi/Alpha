@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageButton;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -23,14 +24,11 @@ import java.util.List;
 public class Home extends AppCompatActivity {
 
     private RecyclerView recyclerView;
+    private ImageButton chatImageButton;
     private BottomNavigationView bottomNev;
     private MyAdapter myAdapter;
     private List<Alpha> alphaList;
-    private CollapsingToolbarLayout collapsingToolbarLayout;
-    private AppBarLayout appBarLayout;
     private Toolbar toolbar;
-    private boolean isAppBarVisible = true;
-
     // firebase auth
     private FirebaseAuth firebaseAuth;
     private FirebaseUser user;
@@ -45,12 +43,14 @@ public class Home extends AppCompatActivity {
         setContentView(R.layout.activity_home);
 
 
-
+        chatImageButton=findViewById(R.id.chatImageButton);
         bottomNev = findViewById(R.id.bottomNev);
         recyclerView = findViewById(R.id.recyclerView);
 
-
-
+        chatImageButton.setOnClickListener(view -> {
+            Intent i = new Intent(Home.this,ChatActivity.class);
+            startActivity(i);
+        });
 
         // Toolbar code
          toolbar = findViewById(R.id.toolbar);
@@ -67,6 +67,7 @@ public class Home extends AppCompatActivity {
         alphaList = new ArrayList<>();
         myAdapter = new MyAdapter(Home.this, alphaList);
         recyclerView.setHasFixedSize(false);
+
 
 
         // Bottom nev code

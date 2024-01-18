@@ -46,9 +46,9 @@ public class CreateAccountActivity extends AppCompatActivity {
 
     //firebase collection
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private CollectionReference collectionReference = db.collection("Alpha");
 
-    ActivityResultLauncher<String> takePhoto;
-    Uri imageUri;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,26 +56,6 @@ public class CreateAccountActivity extends AppCompatActivity {
         setContentView(R.layout.activity_create_account);
 
         profileImage = findViewById(R.id.profileImage);
-
-
-        takePhoto = registerForActivityResult(new ActivityResultContracts.GetContent(),
-                new ActivityResultCallback<Uri>() {
-                    @Override
-                    public void onActivityResult(Uri o) {
-                        //showing the image
-                        profileImage.setImageURI(o);
-
-                        //getting the image uri
-                        imageUri = o;
-                    }
-                });
-        profileImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                takePhoto.launch("image/*");
-            }
-        });
-
         createBtn = findViewById(R.id.createNewAccountBtn);
         pwd = findViewById(R.id.pwd);
         email = findViewById(R.id.email);
@@ -146,7 +126,7 @@ public class CreateAccountActivity extends AppCompatActivity {
                             // Email is already in use
                             // Inform the user or provide a password reset option
                             Toast.makeText(CreateAccountActivity.this,
-                                    "Email is already in use. Please reset your password if needed.",
+                                    "a.",
                                     Toast.LENGTH_SHORT).show();
                         } else {
                             // Other registration failures

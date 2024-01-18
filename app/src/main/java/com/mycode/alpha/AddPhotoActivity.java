@@ -36,7 +36,7 @@ public class AddPhotoActivity extends AppCompatActivity {
     private ImageButton imageButton_c , imageButton_g;
     private ImageView imageView;
     private Button upload_btn;
-    private EditText editText;
+    private EditText caption;
     private ProgressBar progress_bar;
 
     //Firebase storage
@@ -66,7 +66,7 @@ public class AddPhotoActivity extends AppCompatActivity {
         imageButton_g = findViewById(R.id.imageButton_g);
         imageView = findViewById(R.id.imageView);
         upload_btn = findViewById(R.id.upload_btn);
-        editText = findViewById(R.id.editText);
+        caption = findViewById(R.id.caption);
         progress_bar = findViewById(R.id.progress_bar);
 
 
@@ -116,24 +116,25 @@ public class AddPhotoActivity extends AppCompatActivity {
     }
 
     private void uploadOnServer() {
-        String caption = editText.getText().toString().trim();
+        String userCaption = caption.getText().toString().trim();
         progress_bar.setVisibility(View.VISIBLE);
-        if (!TextUtils.isEmpty(caption)&&imageUri !=null){
+        if (!TextUtils.isEmpty(userCaption)&&imageUri !=null){
 
-           final StorageReference filePath = storageReference
-                   .child("alpha_image").child("my_mage"+currentUserId+ Timestamp.now().getSeconds());
-           //uploading the image
-            filePath.putFile(imageUri)
+            StorageReference filePath = storageReference
+                   .child("alpha")
+                   .child("/image/"+currentUserId+ Timestamp.now().getSeconds());
+               //uploading the image
+               filePath.putFile(imageUri)
                     .addOnSuccessListener(taskSnapshot -> {
                       filePath.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                           @Override
                           public void onSuccess(Uri uri) {
                               String imageUrl = uri.toString();
                               Alpha alpha = new Alpha();
-                              alpha.setCaption(caption);
+                              alpha.setCaption(userCaption);
                               alpha.setTimeAdded(new Timestamp(new Date()));
                               alpha.setImageUrl(imageUrl);
-                              alpha.setUserName(currentUserName);
+                              alpha.setEmail(user.getEmail());
                               alpha.setUserId(currentUserId);
 
                               //after uploading we direct the user on that activity
@@ -164,7 +165,7 @@ public class AddPhotoActivity extends AppCompatActivity {
                         public void onFailure(@NonNull Exception e) {
                             progress_bar.setVisibility(View.INVISIBLE);
                             Toast.makeText(AddPhotoActivity.this,
-                                    "Failed Retry"+e.getMessage(),
+                                    "Failed!!! " +e.getMessage(),
                                     Toast.LENGTH_SHORT).show();
                         }
                     });

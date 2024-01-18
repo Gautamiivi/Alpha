@@ -30,29 +30,20 @@
         android:textSize="18sp"
         android:textStyle="bold" />
 
-    <!-- Follower Count -->
-    <TextView
-        android:id="@+id/followerCount"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/username"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="8dp"
-        android:text="Followers: 1M"
-        android:textSize="14sp" />
 
     <!-- Image Grid -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/imageGridRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="507dp"
-        android:layout_below="@id/followerCount"
+
+        android:layout_below="@+id/username"
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginStart="0dp"
 
-        android:layout_marginTop="20dp"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="40dp"
         android:layout_marginEnd="1dp"
         android:layout_marginBottom="0dp"
         android:padding="8dp"

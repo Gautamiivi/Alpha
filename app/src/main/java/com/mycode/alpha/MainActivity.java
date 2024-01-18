@@ -29,6 +29,8 @@ public class MainActivity extends AppCompatActivity {
     private Button forgetPwd;
     private Button createAccount;
 
+    private static final String USER_PREFS_KEY = "user_prefs";
+    private static final String IS_USER_LOGGED_IN_KEY = "is_user_logged_in";
 
     //Firebase Auth
     private FirebaseAuth firebaseAuth;
@@ -63,9 +65,15 @@ public class MainActivity extends AppCompatActivity {
                 currentUser = firebaseAuth.getCurrentUser();
                 if (currentUser != null) {
                     // User is already authenticated, go to Home activity
-                    Intent intent = new Intent(MainActivity.this, Home.class);
-                    startActivity(intent);
-                    finish(); // Finish this activity to prevent going back to the login screen
+                    MainActivity.this.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            // UI updates here
+                            Intent i = new Intent(MainActivity.this, Home.class);
+                            startActivity(i);
+                            finish();
+                        }
+                    });
                 }
             }
         };
@@ -83,13 +91,6 @@ public class MainActivity extends AppCompatActivity {
         firebaseAuth.addAuthStateListener(authStateListener);
     }
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-        if (authStateListener != null) {
-            firebaseAuth.removeAuthStateListener(authStateListener);
-        }
-    }
     private void verifyUser(String email,String pass){
         if (!TextUtils.isEmpty(email) && !TextUtils.isEmpty(pass)){
             firebaseAuth.signInWithEmailAndPassword(email,pass)
@@ -123,9 +124,9 @@ public class MainActivity extends AppCompatActivity {
 
     private void saveUserLoginState() {
         // Save user login state using SharedPreferences
-        SharedPreferences preferences = getSharedPreferences("user_prefs", MODE_PRIVATE);
+        SharedPreferences preferences = getSharedPreferences(USER_PREFS_KEY, MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
-        editor.putBoolean("is_user_logged_in", true);
+        editor.putBoolean(IS_USER_LOGGED_IN_KEY, true);
         editor.apply();
     }
 
